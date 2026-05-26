@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <div class="d-inline-flex align-items-center gap-2 mb-3 px-3 py-2 rounded"
+                style="background: rgba(232,0,45,0.06); border: 1px solid rgba(232,0,45,0.18);">
+                <i class="fa-solid fa-id-card text-rb-red"></i>
+                <span style="font-family: var(--font-brand); font-size: 0.7rem; color: var(--rb-red); letter-spacing: 1px; text-transform: uppercase;">
+                    VIP Credential
+                </span>
+            </div>
+            <h1 class="title-f1 mb-2" style="font-size: 1.8rem; color: var(--rb-navy);">Paddock Access Pass</h1>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">Sampaikan pertanyaan atau masukan Anda kepada tim kami.</p>
+        </div>
+
+        <!-- Card -->
+        <div class="card-f1" style="border-top: 3px solid var(--rb-red);">
+            <div class="p-4 p-md-5">
+                <form onsubmit="handleSubmit(event)">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="form-f1-group mb-0">
+                                <label for="nama" class="form-label-f1">
+                                    <i class="fa-solid fa-user me-1 text-rb-red"></i>Nama
+                                </label>
+                                <input type="text" class="form-control form-control-f1" id="nama"
+                                    placeholder="Nama lengkap Anda" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-f1-group mb-0">
+                                <label for="email" class="form-label-f1">
+                                    <i class="fa-solid fa-envelope me-1 text-rb-red"></i>Email
+                                </label>
+                                <input type="email" class="form-control form-control-f1" id="email"
+                                    placeholder="nama@domain.com" required>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-f1-group mb-0">
+                                <label for="pesan" class="form-label-f1">
+                                    <i class="fa-solid fa-message me-1 text-rb-red"></i>Pesan
+                                </label>
+                                <textarea class="form-control form-control-f1" id="pesan" rows="5"
+                                    placeholder="Tulis pesan, masukan, atau pertanyaan Anda..." required></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5">
+                        <button type="submit" id="submitBtn" class="btn-f1 w-100 justify-content-center">
+                            <i class="fa-solid fa-paper-plane"></i> Kirim Pesan
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Barcode Footer -->
+            <div class="barcode-container mx-4 mx-md-5 mb-4">
+                <div>
+                    <p class="mb-0" style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Paddock</p>
+                    <p class="mb-0" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Pit Lane — Bullring Sec A</p>
+                </div>
+                <div class="d-flex flex-column align-items-end gap-1">
+                    <div class="barcode-lines"></div>
+                    <span class="pass-id">RB20-2026-MV1</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function handleSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.innerHTML = '<i class="fa-solid fa-check me-2"></i>Pesan Terkirim!';
+    btn.style.background = '#22C55E';
+    btn.disabled = true;
+    setTimeout(() => {
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i>Kirim Pesan';
+        btn.style.background = '';
+        btn.disabled = false;
+        e.target.reset();
+    }, 3000);
+}
+</script>
+
+{% endblock %}

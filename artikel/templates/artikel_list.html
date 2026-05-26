@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="d-flex align-items-end justify-content-between flex-wrap gap-3 mb-5">
+    <div>
+        <p class="section-heading mb-2"><i class="fa-solid fa-newspaper text-rb-red me-2"></i>Paddock Press</p>
+        <h2 class="title-f1 mb-2" style="font-size: 2rem;">Semua <span class="text-rb-red">Artikel</span></h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Analisis mendalam, berita terkini, dan opini langsung dari paddock.</p>
+    </div>
+    <a href="{% url 'artikel:artikel_tulis' %}" class="btn-f1 align-self-center">
+        <i class="fa-solid fa-pen-nib"></i> Tulis Artikel
+    </a>
+</div>
+
+<!-- Search + Filter -->
+<div class="row g-3 mb-5 align-items-center">
+    <div class="col-md-5">
+        <form method="GET" action="{% url 'artikel:artikel_list' %}" class="d-flex gap-2">
+            <input type="text" name="q" value="{{ query }}" class="form-control form-control-f1"
+                placeholder="Cari artikel...">
+            {% if query %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+            <button type="submit" class="btn-f1" style="padding: 11px 18px; white-space: nowrap;">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+    </div>
+    <div class="col-md-7 d-flex flex-wrap gap-2">
+        <a href="{% url 'artikel:artikel_list' %}{% if query %}?q={{ query }}{% endif %}"
+            class="category-pill {% if not selected_category %}active{% endif %}">Semua</a>
+        {% for cat in categories %}
+        <a href="{% url 'artikel:artikel_list' %}?category={{ cat }}{% if query %}&q={{ query }}{% endif %}"
+            class="category-pill {% if selected_category == cat %}active{% endif %}">{{ cat }}</a>
+        {% endfor %}
+        {% if query or selected_category %}
+        <a href="{% url 'artikel:artikel_list' %}" class="category-pill" style="border-color: var(--rb-red); color: var(--rb-red);">
+            <i class="fa-solid fa-xmark me-1"></i>Reset
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- Articles Grid -->
+<div class="row g-4">
+    {% for art in artikels %}
+    <div class="col-lg-4 col-md-6">
+        <div class="card-f1 h-100 d-flex flex-column">
+            <div class="card-img-f1-container">
+                <img src="{{ art.gambar_url }}" class="card-img-f1" alt="{{ art.judul }}">
+                <div class="card-img-overlay-f1">
+                    <span class="badge-f1" style="background: var(--rb-red); color: #fff; border: none; font-size: 0.65rem;">
+                        {{ art.kategori }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="p-4 d-flex flex-column flex-grow-1">
+                <div class="d-flex justify-content-between mb-3" style="font-size: 0.74rem; color: var(--text-muted);">
+                    <span><i class="fa-solid fa-user me-1"></i>{{ art.penulis|truncatechars:20 }}</span>
+                    <span><i class="fa-solid fa-calendar me-1"></i>{{ art.tanggal_dibuat|date:"d M Y" }}</span>
+                </div>
+
+                <h5 class="mb-3" style="font-family: var(--font-brand); font-size: 0.88rem; font-weight: 700;
+                    color: var(--rb-navy); line-height: 1.45; flex-grow: 1;">
+                    {{ art.judul }}
+                </h5>
+
+                <p style="font-size: 0.83rem; line-height: 1.65; color: var(--text-muted); margin-bottom: 20px;
+                    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                    {{ art.ringkasan }}
+                </p>
+
+                <div class="d-flex gap-2 mt-auto">
+                    <a href="{% url 'artikel:artikel_detail' art.id %}" class="btn-f1 justify-content-center flex-grow-1">
+                        <i class="fa-solid fa-book-open"></i> Baca
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'artikel:artikel_edit' art.id %}" class="btn-f1-outline" style="padding: 10px 14px;" title="Edit Artikel">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+                    <a href="{% url 'artikel:artikel_delete' art.id %}" class="btn-f1-outline" style="padding: 10px 14px; border-color: var(--rb-red); color: var(--rb-red);" title="Hapus Artikel">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <i class="fa-solid fa-newspaper mb-3" style="font-size: 2.5rem; color: var(--text-light);"></i>
+        <h4 class="title-f1 mb-2" style="font-size: 1.2rem;">Artikel Tidak Ditemukan</h4>
+        <p style="color: var(--text-muted);" class="mb-4">Belum ada artikel yang sesuai.</p>
+        <a href="{% url 'artikel:artikel_tulis' %}" class="btn-f1">
+            <i class="fa-solid fa-pen-nib"></i> Jadilah yang Pertama Menulis!
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

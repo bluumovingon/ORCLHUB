@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9">
+
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <div class="d-inline-flex align-items-center gap-2 mb-3 px-3 py-2 rounded"
+                style="background: rgba(255,201,6,0.08); border: 1px solid rgba(255,201,6,0.25);">
+                <i class="fa-solid fa-pen-nib text-rb-red"></i>
+                <span style="font-family: var(--font-brand); font-size: 0.7rem; color: var(--rb-red); letter-spacing: 1px; text-transform: uppercase;">
+                    Press Correspondent
+                </span>
+            </div>
+            <h1 class="title-f1 mb-2" style="font-size: 1.8rem; color: var(--rb-navy);">{% if artikel %}Edit Artikel{% else %}Tulis Artikel{% endif %}</h1>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">Terbitkan analisis atau berita Anda ke Paddock Hub.</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="card-f1" style="border-top: 3px solid var(--rb-red);">
+            <div class="p-4 p-md-5">
+                <form method="POST" action="{% url 'artikel:artikel_tulis' %}">
+                    {% csrf_token %}
+
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <div class="form-f1-group mb-0">
+                                <label for="judul" class="form-label-f1">
+                                    <i class="fa-solid fa-heading me-1 text-rb-red"></i>Judul Artikel
+                                </label>
+                                <input type="text" class="form-control form-control-f1" id="judul" name="judul"
+                                    value="{{ artikel.judul }}" placeholder="Contoh: Analisis Strategi Red Bull di GP Monaco..." required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-f1-group mb-0">
+                                <label for="penulis" class="form-label-f1">
+                                    <i class="fa-solid fa-user me-1 text-rb-red"></i>Penulis
+                                </label>
+                                <input type="text" class="form-control form-control-f1" id="penulis" name="penulis"
+                                    value="{{ artikel.penulis }}" placeholder="Nama Anda..." required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-f1-group mb-0">
+                                <label for="kategori" class="form-label-f1">
+                                    <i class="fa-solid fa-tags me-1 text-rb-red"></i>Kategori
+                                </label>
+                                <select class="form-control form-control-f1" id="kategori" name="kategori" required>
+                                    {% for cat in categories %}
+                                    <option value="{{ cat }}" {% if artikel.kategori == cat %}selected{% endif %}>{{ cat }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-f1-group mb-0">
+                                <label for="gambar_url" class="form-label-f1">
+                                    <i class="fa-solid fa-image me-1 text-rb-red"></i>URL Gambar Cover
+                                    <span style="color: var(--text-muted); font-weight: 400; text-transform: none; letter-spacing: 0;">(Opsional)</span>
+                                </label>
+                                <input type="url" class="form-control form-control-f1" id="gambar_url" name="gambar_url"
+                                    value="{{ artikel.gambar_url }}" placeholder="https://images.unsplash.com/...">
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-f1-group mb-0">
+                                <label for="ringkasan" class="form-label-f1">
+                                    <i class="fa-solid fa-align-left me-1 text-rb-red"></i>Ringkasan
+                                    <span style="color: var(--text-muted); font-weight: 400; text-transform: none; letter-spacing: 0;">(Maks. 500 karakter)</span>
+                                </label>
+                                <input type="text" class="form-control form-control-f1" id="ringkasan" name="ringkasan"
+                                    value="{{ artikel.ringkasan }}" placeholder="Deskripsi singkat yang muncul di kartu preview..." required maxlength="500">
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-f1-group mb-0">
+                                <label for="konten" class="form-label-f1">
+                                    <i class="fa-solid fa-file-lines me-1 text-rb-red"></i>Isi Artikel
+                                </label>
+                                <textarea class="form-control form-control-f1" id="konten" name="konten"
+                                    rows="10" placeholder="Tulis analisis mendalam, berita, atau opini Anda di sini..." required>{{ artikel.konten }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 mt-5">
+                        <button type="submit" class="btn-f1 flex-grow-1 justify-content-center">
+                            <i class="fa-solid fa-paper-plane"></i> {% if artikel %}Simpan Perubahan{% else %}Terbitkan Artikel{% endif %}
+                        </button>
+                        <a href="{% url 'artikel:artikel_list' %}" class="btn-f1-outline">
+                            <i class="fa-solid fa-xmark"></i> Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Barcode Footer -->
+            <div class="barcode-container mx-4 mx-md-5 mb-4">
+                <div>
+                    <p class="mb-0" style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Media Channel</p>
+                    <p class="mb-0" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Oracle Red Bull Racing Hub</p>
+                </div>
+                <div class="d-flex flex-column align-items-end gap-1">
+                    <div class="barcode-lines"></div>
+                    <span class="pass-id">PRESS-2026</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

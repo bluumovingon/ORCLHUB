@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9">
+
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <div class="d-inline-flex align-items-center gap-2 mb-3 px-3 py-2 rounded"
+                style="background: rgba(255,201,6,0.08); border: 1px solid rgba(255,201,6,0.25);">
+                <i class="fa-solid fa-helmet-safety text-rb-yellow"></i>
+                <span style="font-family: var(--font-brand); font-size: 0.7rem; color: var(--rb-yellow); letter-spacing: 1px; text-transform: uppercase;">
+                    Aerodynamic Lab
+                </span>
+            </div>
+            <h1 class="title-f1 mb-2" style="font-size: 1.8rem; color: var(--rb-navy);">{% if helm %}Edit Helm{% else %}Tambah Helm{% endif %}</h1>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">Masukkan data helm pembalap ke dalam galeri eksklusif.</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="card-f1" style="border-top: 3px solid var(--rb-yellow);">
+            <div class="p-4 p-md-5">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="form-f1-group mb-0">
+                                <label for="nama_pembalap" class="form-label-f1">
+                                    <i class="fa-solid fa-user me-1 text-rb-red"></i>Nama Pembalap
+                                </label>
+                                <input type="text" class="form-control form-control-f1" id="nama_pembalap" name="nama_pembalap"
+                                    value="{{ helm.nama_pembalap }}" placeholder="Max Verstappen" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-f1-group mb-0">
+                                <label for="judul_desain" class="form-label-f1">
+                                    <i class="fa-solid fa-palette me-1 text-rb-red"></i>Judul Desain
+                                </label>
+                                <input type="text" class="form-control form-control-f1" id="judul_desain" name="judul_desain"
+                                    value="{{ helm.judul_desain }}" placeholder="Contoh: World Champion Edition" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-f1-group mb-0">
+                                <label for="tahun" class="form-label-f1">
+                                    <i class="fa-regular fa-calendar me-1 text-rb-red"></i>Tahun
+                                </label>
+                                <input type="number" class="form-control form-control-f1" id="tahun" name="tahun"
+                                    value="{{ helm.tahun }}" placeholder="2023" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-f1-group mb-0">
+                                <label for="sasis" class="form-label-f1">
+                                    <i class="fa-solid fa-car-side me-1 text-rb-red"></i>Sasis Mobil
+                                </label>
+                                <input type="text" class="form-control form-control-f1" id="sasis" name="sasis"
+                                    value="{{ helm.sasis }}" placeholder="RB19" required>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-f1-group mb-0">
+                                <label for="balapan_berkesan" class="form-label-f1">
+                                    <i class="fa-solid fa-flag-checkered me-1 text-rb-red"></i>Balapan Berkesan
+                                </label>
+                                <input type="text" class="form-control form-control-f1" id="balapan_berkesan" name="balapan_berkesan"
+                                    value="{{ helm.balapan_berkesan }}" placeholder="Grand Prix Abu Dhabi" required>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-f1-group mb-0">
+                                <label for="gambar_url" class="form-label-f1">
+                                    <i class="fa-solid fa-image me-1 text-rb-red"></i>URL Gambar Helm
+                                    <span style="color: var(--text-muted); font-weight: 400; text-transform: none; letter-spacing: 0;">(Opsional)</span>
+                                </label>
+                                <input type="url" class="form-control form-control-f1" id="gambar_url" name="gambar_url"
+                                    value="{{ helm.gambar_url }}" placeholder="https://images.unsplash.com/...">
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-f1-group mb-0">
+                                <label for="deskripsi" class="form-label-f1">
+                                    <i class="fa-solid fa-file-lines me-1 text-rb-red"></i>Deskripsi
+                                </label>
+                                <textarea class="form-control form-control-f1" id="deskripsi" name="deskripsi"
+                                    rows="5" placeholder="Deskripsi spesifikasi atau cerita di balik desain helm..." required>{{ helm.deskripsi }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 mt-5">
+                        <button type="submit" class="btn-f1 flex-grow-1 justify-content-center">
+                            <i class="fa-solid fa-paper-plane"></i> {% if helm %}Simpan Perubahan{% else %}Tambahkan Helm{% endif %}
+                        </button>
+                        <a href="{% url 'galeri:galeri_list' %}" class="btn-f1-outline">
+                            <i class="fa-solid fa-xmark"></i> Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Barcode Footer -->
+            <div class="barcode-container mx-4 mx-md-5 mb-4">
+                <div>
+                    <p class="mb-0" style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Aerodynamic Lab</p>
+                    <p class="mb-0" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Oracle Red Bull Racing Hub</p>
+                </div>
+                <div class="d-flex flex-column align-items-end gap-1">
+                    <div class="barcode-lines"></div>
+                    <span class="pass-id">HELMET-SPEC-00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

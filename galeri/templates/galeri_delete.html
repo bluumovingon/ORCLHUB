@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center py-5">
+        <div class="mb-4">
+            <i class="fa-solid fa-triangle-exclamation text-rb-red" style="font-size: 4rem;"></i>
+        </div>
+        <h2 class="title-f1 mb-3" style="font-size: 1.8rem; color: var(--rb-navy);">
+            Hapus Data Helm?
+        </h2>
+        <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 2rem;">
+            Anda yakin ingin menghapus data helm <strong>"{{ helm.judul_desain }}"</strong> milik <strong>{{ helm.nama_pembalap }}</strong>? Tindakan ini tidak dapat dibatalkan.
+        </p>
+
+        <form method="POST" class="d-flex justify-content-center gap-3">
+            {% csrf_token %}
+            <a href="{% url 'galeri:galeri_list' %}" class="btn-f1-outline">
+                <i class="fa-solid fa-xmark"></i> Batal
+            </a>
+            <button type="submit" class="btn-f1" style="background: var(--rb-red); border-color: var(--rb-red); color: white;">
+                <i class="fa-solid fa-trash"></i> Ya, Hapus Data
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

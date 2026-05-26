@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- ===== HERO SECTION ===== -->
+<div class="hero-f1 mb-5">
+    <div class="row align-items-center g-4">
+
+        <!-- Left: Brand Message -->
+        <div class="col-lg-7">
+            <div class="d-flex align-items-center gap-2 mb-4">
+                <span class="telemetry-active-dot"></span>
+                <span
+                    style="font-family: var(--font-brand); font-size: 0.65rem; color: rgba(255,255,255,0.6); letter-spacing: 1.5px; text-transform: uppercase;">
+                    Oracle Red Bull Racing — Live
+                </span>
+            </div>
+
+            <h1 class="title-f1 mb-3" style="font-size: clamp(1.8rem, 4vw, 2.8rem);">
+                PUSAT INFORMASI<br>
+                <span class="title-gradient">RED BULL RACING</span>
+            </h1>
+
+            <p
+                style="color: rgba(255,255,255,0.7); font-size: 1rem; max-width: 500px; line-height: 1.75; margin-bottom: 36px;">
+                Artikel analisis terdalam, galeri seni helm pembalap legendaris — semua hadir dalam satu paddock
+                eksklusif Oracle Red Bull Racing.
+            </p>
+
+            <div class="d-flex flex-wrap gap-3">
+                <a href="{% url 'galeri:galeri_list' %}" class="btn-f1">
+                    <i class="fa-solid fa-helmet-safety"></i> Galeri Helm
+                </a>
+                <a href="{% url 'artikel:artikel_list' %}" class="btn-f1-outline"
+                    style="border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.9) !important;">
+                    <i class="fa-solid fa-newspaper"></i> Baca Artikel
+                </a>
+            </div>
+        </div>
+
+        <!-- Right: Live Telemetry Panel -->
+        <div class="col-lg-5">
+            <div class="telemetry-container">
+                <div class="telemetry-header">
+                    <span><i class="fa-solid fa-microchip me-2" style="color: var(--rb-red);"></i>RB20 TELEMETRY</span>
+                    <span style="color: #22C55E; font-size: 0.65rem;">
+                        <i class="fa-solid fa-circle me-1" style="font-size: 0.4rem;"></i>LIVE
+                    </span>
+                </div>
+                <div class="row align-items-center g-3">
+                    <div class="col-5">
+                        <div class="gauge-container">
+                            <div class="speed-circle">
+                                <div class="speed-number">341<span>KM/H</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div class="telemetry-grid">
+                            <div class="telemetry-item">
+                                <div class="telemetry-label">GEAR</div>
+                                <div class="telemetry-val red-glow">8</div>
+                            </div>
+                            <div class="telemetry-item">
+                                <div class="telemetry-label">RPM</div>
+                                <div class="telemetry-val">12.2K</div>
+                            </div>
+                            <div class="telemetry-item">
+                                <div class="telemetry-label">G-FORCE</div>
+                                <div class="telemetry-val yellow-glow">4.5G</div>
+                            </div>
+                            <div class="telemetry-item">
+                                <div class="telemetry-label">ERS</div>
+                                <div class="telemetry-val text-success">100%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== DRIVER LINEUP ===== -->
+<p class="section-heading"><i class="fa-solid fa-users text-rb-red me-2"></i>Driver Lineup 2025</p>
+
+<div class="row g-4 mb-5">
+
+    <!-- Max Verstappen -->
+    <div class="col-lg-6">
+        <div class="card-f1 p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="driver-photo-container">
+                    <img src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcR5uQPsHT8vEaVdmnzw35ijJU142Uv4Mj7vm7BQgRN455UvVytvMuDEiLKJEm1r-ZGXaIbFoch1IwxpR3sJR9Tjo6ykZ_umHXtHlGWhkkZ79hTqzn_fThEuQeikbdwiiTMvm97bXyxTCXBI&s=19"
+                        alt="Max Verstappen" class="driver-photo">
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <h4 class="mb-0"
+                            style="font-family: var(--font-brand); font-size: 0.95rem; color: var(--rb-navy);">
+                            Max Verstappen
+                        </h4>
+                        <span class="badge-f1 badge-f1-yellow">#3</span>
+                    </div>
+                    <p class="mb-0" style="font-size: 0.78rem; color: var(--text-muted);">4× World Champion ·
+                        Netherlands</p>
+                </div>
+                <span class="badge-f1 badge-f1-red">Four Crown</span>
+            </div>
+
+            <p class="mb-4" style="font-size: 0.88rem; line-height: 1.7; color: var(--text-secondary);">
+                Sang juara dunia bertahan tetap menjadi ujung tombak utama sekaligus "jantung" dari proyek jangka
+                panjang Red Bull di era regulasi baru ini.
+            </p>
+
+            <div class="d-flex flex-column gap-3">
+                <div>
+                    <div class="d-flex justify-content-between mb-1"
+                        style="font-size: 0.73rem; color: var(--text-muted);">
+                        <span>QUALIFYING PACE</span><span style="color: var(--rb-navy); font-weight: 600;">98%</span>
+                    </div>
+                    <div class="driver-stat-bar">
+                        <div class="driver-stat-fill driver-stat-fill-yellow" style="width: 98%;"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex justify-content-between mb-1"
+                        style="font-size: 0.73rem; color: var(--text-muted);">
+                        <span>RACE CRAFT</span><span style="color: var(--rb-navy); font-weight: 600;">97%</span>
+                    </div>
+                    <div class="driver-stat-bar">
+                        <div class="driver-stat-fill driver-stat-fill-yellow" style="width: 97%;"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex justify-content-between mb-1"
+                        style="font-size: 0.73rem; color: var(--text-muted);">
+                        <span>CONSISTENCY</span><span style="color: var(--rb-navy); font-weight: 600;">96%</span>
+                    </div>
+                    <div class="driver-stat-bar">
+                        <div class="driver-stat-fill driver-stat-fill-yellow" style="width: 96%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Isack Hadjar -->
+    <div class="col-lg-6">
+        <div class="card-f1 p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="driver-photo-container" style="border-color: var(--rb-red);">
+                    <img src="data:image/webp;base64,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"
+                        alt="Isack Hadjar" class="driver-photo">
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <h4 class="mb-0"
+                            style="font-family: var(--font-brand); font-size: 0.95rem; color: var(--rb-navy);">
+                            Isack Hadjar
+                        </h4>
+                        <span class="badge-f1 badge-f1-red">#22</span>
+                    </div>
+                    <p class="mb-0" style="font-size: 0.78rem; color: var(--text-muted);">Rookie ·
+                        France</p>
+                </div>
+                <span class="badge-f1"
+                    style="background: rgba(0,30,60,0.07); border: 1px solid rgba(0,30,60,0.2); color: var(--rb-navy);">El
+                    Checo</span>
+            </div>
+
+            <p class="mb-4" style="font-size: 0.88rem; line-height: 1.7; color: var(--text-secondary);">
+                Pembalap muda berbakat asal Prancis ini resmi naik kelas dari tim junior (Racing Bulls) untuk
+                mendampingi Verstappen,
+                menggantikan posisi yang sebelumnya ditinggalkan Yuki Tsunoda (yang kini bergeser menjadi Test & Reserve
+                Driver tim).
+            </p>
+
+            <div class="d-flex flex-column gap-3">
+                <div>
+                    <div class="d-flex justify-content-between mb-1"
+                        style="font-size: 0.73rem; color: var(--text-muted);">
+                        <span>QUALIFYING PACE</span><span style="color: var(--rb-navy); font-weight: 600;">89%</span>
+                    </div>
+                    <div class="driver-stat-bar">
+                        <div class="driver-stat-fill driver-stat-fill-red" style="width: 89%;"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex justify-content-between mb-1"
+                        style="font-size: 0.73rem; color: var(--text-muted);">
+                        <span>RACE CRAFT</span><span style="color: var(--rb-navy); font-weight: 600;">93%</span>
+                    </div>
+                    <div class="driver-stat-bar">
+                        <div class="driver-stat-fill driver-stat-fill-red" style="width: 93%;"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex justify-content-between mb-1"
+                        style="font-size: 0.73rem; color: var(--text-muted);">
+                        <span>CONSISTENCY</span><span style="color: var(--rb-navy); font-weight: 600;">88%</span>
+                    </div>
+                    <div class="driver-stat-bar">
+                        <div class="driver-stat-fill driver-stat-fill-red" style="width: 88%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== QUICK ACCESS ===== -->
+<p class="section-heading"><i class="fa-solid fa-grid-2 text-rb-red me-2"></i>Jelajahi Paddock</p>
+
+<div class="row g-4">
+    <!-- Artikel -->
+    <div class="col-md-6">
+        <a href="{% url 'artikel:artikel_list' %}" class="text-decoration-none">
+            <div class="card-f1 p-4 d-flex align-items-start gap-3">
+                <div
+                    style="width: 48px; height: 48px; border-radius: 10px; background: rgba(232,0,45,0.07); border: 1.5px solid rgba(232,0,45,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fa-solid fa-newspaper text-rb-red" style="font-size: 1.1rem;"></i>
+                </div>
+                <div>
+                    <h5 class="mb-1" style="font-family: var(--font-brand); font-size: 0.88rem; color: var(--rb-navy);">
+                        Artikel & Analisis
+                    </h5>
+                    <p class="mb-0" style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
+                        Berita, analisis strategi balapan, dan opini fans terkini dari paddock.
+                    </p>
+                </div>
+                <i class="fa-solid fa-arrow-right ms-auto text-rb-red" style="font-size: 0.8rem; margin-top: 4px;"></i>
+            </div>
+        </a>
+    </div>
+
+    <!-- Galeri -->
+    <div class="col-md-6">
+        <a href="{% url 'galeri:galeri_list' %}" class="text-decoration-none">
+            <div class="card-f1 p-4 d-flex align-items-start gap-3">
+                <div
+                    style="width: 48px; height: 48px; border-radius: 10px; background: rgba(255,201,6,0.1); border: 1.5px solid rgba(255,201,6,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fa-solid fa-helmet-safety" style="color: #9A7500; font-size: 1.1rem;"></i>
+                </div>
+                <div>
+                    <h5 class="mb-1" style="font-family: var(--font-brand); font-size: 0.88rem; color: var(--rb-navy);">
+                        Galeri Helm
+                    </h5>
+                    <p class="mb-0" style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
+                        Helm bersejarah dan paling berkesan dari para juara dunia Red Bull Racing.
+                    </p>
+                </div>
+                <i class="fa-solid fa-arrow-right ms-auto text-rb-red" style="font-size: 0.8rem; margin-top: 4px;"></i>
+            </div>
+        </a>
+    </div>
+</div>
+
+{% endblock %}

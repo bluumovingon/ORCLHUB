@@ -1,0 +1,430 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Oracle Red Bull Racing Hub</title>
+    <meta name="description" content="Login ke Oracle Red Bull Racing Hub untuk mengakses dashboard eksklusif F1.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Titillium+Web:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rb-red: #E8002D;
+            --rb-navy: #001A3C;
+            --rb-yellow: #FFC906;
+            --rb-dark: #010B18;
+            --rb-card: rgba(255,255,255,0.04);
+            --rb-border: rgba(255,255,255,0.09);
+            --font-brand: 'Titillium Web', sans-serif;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--rb-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            padding: 2.5rem 1rem;
+        }
+
+        /* Animated Background */
+        .bg-circuit {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 20% 10%, rgba(232,0,45,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 80% 80%, rgba(0,26,60,0.5) 0%, transparent 60%),
+                radial-gradient(ellipse 100% 80% at 50% 50%, rgba(1,11,24,1) 0%, transparent 100%);
+            animation: bgPulse 8s ease-in-out infinite alternate;
+        }
+        @keyframes bgPulse {
+            0% { opacity: 1; }
+            100% { opacity: 0.85; }
+        }
+
+        /* Grid Lines */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* Floating Speed Lines */
+        .speed-line {
+            position: fixed;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(232,0,45,0.4), transparent);
+            animation: speedLine 4s linear infinite;
+            z-index: 0;
+        }
+        .speed-line:nth-child(1) { top: 20%; width: 40%; left: -40%; animation-delay: 0s; }
+        .speed-line:nth-child(2) { top: 45%; width: 60%; left: -60%; animation-delay: 1.5s; }
+        .speed-line:nth-child(3) { top: 70%; width: 30%; left: -30%; animation-delay: 3s; }
+        @keyframes speedLine {
+            0% { transform: translateX(0); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateX(200vw); opacity: 0; }
+        }
+
+        .auth-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 440px;
+            margin: auto;
+        }
+
+        /* Logo Section */
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .auth-logo a {
+            text-decoration: none;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .logo-icon-wrap {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--rb-red), #9A001B);
+            border: 1.5px solid rgba(232,0,45,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 32px rgba(232,0,45,0.3), 0 0 0 1px rgba(232,0,45,0.1);
+            animation: logoGlow 3s ease-in-out infinite alternate;
+        }
+        @keyframes logoGlow {
+            0% { box-shadow: 0 8px 32px rgba(232,0,45,0.3), 0 0 0 1px rgba(232,0,45,0.1); }
+            100% { box-shadow: 0 8px 48px rgba(232,0,45,0.55), 0 0 0 1px rgba(232,0,45,0.25); }
+        }
+        .logo-text {
+            font-family: var(--font-brand);
+            font-weight: 900;
+            font-size: 1.15rem;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        .logo-text span {
+            color: var(--rb-red);
+        }
+        .logo-sub {
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Auth Card */
+        .auth-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 2.25rem 2rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow:
+                0 24px 64px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.06);
+            animation: cardFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-title {
+            font-family: var(--font-brand);
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #fff;
+            margin-bottom: 0.35rem;
+        }
+        .auth-subtitle {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.45);
+            margin-bottom: 1.75rem;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 1.1rem;
+        }
+        .form-label-rb {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.55);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 0.5rem;
+        }
+        .form-control-rb {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: #fff;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+        .form-control-rb::placeholder { color: rgba(255,255,255,0.25); }
+        .form-control-rb:focus {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--rb-red);
+            box-shadow: 0 0 0 3px rgba(232,0,45,0.15);
+        }
+        .input-icon-wrap {
+            position: relative;
+        }
+        .input-icon-wrap .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.3);
+            font-size: 0.85rem;
+            pointer-events: none;
+        }
+        .input-icon-wrap .form-control-rb {
+            padding-left: 2.6rem;
+        }
+
+        /* Submit Button */
+        .btn-auth {
+            width: 100%;
+            padding: 0.85rem;
+            background: linear-gradient(135deg, var(--rb-red) 0%, #B8001F 100%);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-family: var(--font-brand);
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-top: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-auth::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .btn-auth:hover::before { opacity: 1; }
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(232,0,45,0.4);
+        }
+        .btn-auth:active { transform: translateY(0); }
+
+        /* Divider */
+        .auth-divider {
+            text-align: center;
+            margin: 1.25rem 0;
+            position: relative;
+        }
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0; right: 0;
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+        }
+        .auth-divider span {
+            background: rgba(10,20,35,0.9);
+            padding: 0 12px;
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.3);
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Link Button */
+        .btn-auth-link {
+            width: 100%;
+            padding: 0.8rem;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.7);
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+        .btn-auth-link:hover {
+            border-color: rgba(255,255,255,0.25);
+            color: #fff;
+            background: rgba(255,255,255,0.04);
+        }
+
+        /* Alert Messages */
+        .auth-alert {
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            margin-bottom: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: alertIn 0.3s ease;
+        }
+        @keyframes alertIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .alert-error {
+            background: rgba(232,0,45,0.12);
+            border: 1px solid rgba(232,0,45,0.3);
+            color: #ff6b6b;
+        }
+        .alert-success {
+            background: rgba(34,197,94,0.1);
+            border: 1px solid rgba(34,197,94,0.25);
+            color: #4ade80;
+        }
+
+        /* Red bar accent on card top */
+        .auth-card::before {
+            content: '';
+            display: block;
+            height: 3px;
+            background: linear-gradient(90deg, var(--rb-red), var(--rb-yellow), var(--rb-red));
+            border-radius: 2px;
+            margin-bottom: 1.75rem;
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.75rem;
+            text-decoration: none;
+            margin-top: 1.5rem;
+            transition: color 0.2s;
+        }
+        .back-home:hover { color: rgba(255,255,255,0.7); }
+        .back-home-wrap { text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="bg-circuit"></div>
+    <div class="bg-grid"></div>
+    <div class="speed-line"></div>
+    <div class="speed-line"></div>
+    <div class="speed-line"></div>
+
+    <div class="auth-wrapper">
+        <!-- Logo -->
+        <div class="auth-logo">
+            <a href="{% url 'index' %}">
+                <div class="logo-icon-wrap">
+                    <i class="fa-solid fa-flag-checkered text-white" style="font-size: 1.6rem;"></i>
+                </div>
+                <div class="logo-text">Red Bull Racing<span>HUB</span></div>
+                <div class="logo-sub">Oracle Partner · Official Fan Portal</div>
+            </a>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="auth-card">
+            <h1 class="auth-title">Masuk ke Paddock</h1>
+            <p class="auth-subtitle">Akses eksklusif ke dashboard Oracle Red Bull Racing</p>
+
+            <!-- Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                <div class="auth-alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+                    <i class="fa-solid {% if message.tags == 'error' %}fa-triangle-exclamation{% else %}fa-circle-check{% endif %}"></i>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Login Form -->
+            <form method="POST" id="login-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label-rb" for="id_username">Username</label>
+                    <div class="input-icon-wrap">
+                        <i class="fa-solid fa-user input-icon"></i>
+                        <input type="text" name="username" id="id_username" class="form-control-rb" placeholder="Masukkan username" required autocomplete="username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label-rb" for="id_password">Password</label>
+                    <div class="input-icon-wrap">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" name="password" id="id_password" class="form-control-rb" placeholder="Masukkan password" required autocomplete="current-password">
+                    </div>
+                </div>
+                <button type="submit" class="btn-auth" id="login-btn">
+                    <i class="fa-solid fa-right-to-bracket me-2"></i>MASUK KE PADDOCK
+                </button>
+            </form>
+
+            <div class="auth-divider"><span>atau</span></div>
+
+            <a href="{% url 'accounts:register' %}" class="btn-auth-link">
+                <i class="fa-solid fa-user-plus me-2"></i>Buat Akun Baru
+            </a>
+        </div>
+
+        <div class="back-home-wrap">
+            <a href="{% url 'index' %}" class="back-home">
+                <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add loading state on submit
+        document.getElementById('login-form').addEventListener('submit', function() {
+            const btn = document.getElementById('login-btn');
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin me-2"></i>MEMPROSES...';
+            btn.disabled = true;
+        });
+    </script>
+</body>
+</html>

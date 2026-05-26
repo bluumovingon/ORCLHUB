@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="mb-5 d-flex justify-content-between align-items-center flex-wrap gap-3">
+    <a href="{% url 'artikel:artikel_list' %}" class="d-inline-flex align-items-center gap-2 text-decoration-none"
+        style="font-size: 0.85rem; color: var(--text-muted); transition: color 200ms;"
+        onmouseover="this.style.color='var(--rb-red)'" onmouseout="this.style.color='var(--text-muted)'">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Artikel
+    </a>
+
+    {% if user.is_authenticated %}
+    <div class="d-flex gap-2">
+        <a href="{% url 'artikel:artikel_edit' artikel.id %}" class="btn-f1-outline" style="padding: 8px 14px; font-size: 0.8rem;">
+            <i class="fa-solid fa-pen"></i> Edit
+        </a>
+        <a href="{% url 'artikel:artikel_delete' artikel.id %}" class="btn-f1-outline" style="padding: 8px 14px; font-size: 0.8rem; border-color: var(--rb-red); color: var(--rb-red);">
+            <i class="fa-solid fa-trash"></i> Hapus
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="row g-5">
+    <!-- Main Article -->
+    <div class="col-lg-8">
+        <div class="article-header">
+            <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+                <span class="badge-f1 badge-f1-red">{{ artikel.kategori }}</span>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">
+                    <i class="fa-solid fa-user me-1"></i>{{ artikel.penulis }}
+                </span>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">
+                    <i class="fa-solid fa-calendar me-1"></i>{{ artikel.tanggal_dibuat|date:"d F Y" }}
+                </span>
+            </div>
+
+            <h1 class="title-f1 mb-5" style="font-size: clamp(1.5rem, 4vw, 2.2rem); line-height: 1.25; color: var(--rb-navy);">
+                {{ artikel.judul }}
+            </h1>
+
+            <div class="rounded overflow-hidden mb-5" style="height: 380px; background: var(--bg-muted);">
+                <img src="{{ artikel.gambar_url }}" alt="{{ artikel.judul }}"
+                    style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+
+            <div class="article-content-body">
+                {{ artikel.konten|linebreaks }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+
+        <!-- Write CTA -->
+        <div class="card-f1 p-4 mb-4" style="border-top: 3px solid var(--rb-red);">
+            <div class="d-flex align-items-center gap-3 mb-3">
+                <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(232,0,45,0.07); border: 1.5px solid rgba(232,0,45,0.2); display: flex; align-items: center; justify-content: center;">
+                    <i class="fa-solid fa-pen-nib text-rb-red"></i>
+                </div>
+                <div>
+                    <p class="mb-0 fw-semibold" style="font-size: 0.9rem; color: var(--rb-navy);">Press Office</p>
+                    <p class="mb-0" style="font-size: 0.75rem; color: var(--text-muted);">Tulis artikel Anda</p>
+                </div>
+            </div>
+            <p style="font-size: 0.83rem; line-height: 1.6; color: var(--text-muted); margin-bottom: 16px;">
+                Punya analisis menarik? Terbitkan langsung di Paddock Hub.
+            </p>
+            <a href="{% url 'artikel:artikel_tulis' %}" class="btn-f1 w-100 justify-content-center">
+                <i class="fa-solid fa-pen-nib"></i> Tulis Sekarang
+            </a>
+        </div>
+
+        <!-- Related Articles -->
+        {% if related_artikels %}
+        <div class="card-f1 p-4">
+            <h5 class="mb-4" style="font-family: var(--font-brand); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">
+                <i class="fa-solid fa-link text-rb-red me-2"></i>Artikel Terkait
+            </h5>
+            <div class="d-flex flex-column gap-3">
+                {% for rel in related_artikels %}
+                <a href="{% url 'artikel:artikel_detail' rel.id %}" class="text-decoration-none d-flex gap-3 align-items-start">
+                    <div style="width: 64px; height: 64px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: var(--bg-muted);">
+                        <img src="{{ rel.gambar_url }}" alt="{{ rel.judul }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div>
+                        <p class="mb-1" style="font-size: 0.82rem; font-weight: 600; color: var(--rb-navy); line-height: 1.35;
+                            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                            {{ rel.judul }}
+                        </p>
+                        <p class="mb-0" style="font-size: 0.72rem; color: var(--text-muted);">
+                            {{ rel.tanggal_dibuat|date:"d M Y" }}
+                        </p>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

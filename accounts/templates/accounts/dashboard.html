@@ -1,0 +1,845 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Oracle Red Bull Racing Hub</title>
+    <meta name="description" content="Dashboard eksklusif Oracle Red Bull Racing Hub — pantau statistik artikel, galeri, dan lebih banyak lagi.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Titillium+Web:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <style>
+        :root {
+            --rb-red: #E8002D;
+            --rb-navy: #001A3C;
+            --rb-yellow: #FFC906;
+            --rb-dark: #010B18;
+            --rb-bg: #F0F4F8;
+            --rb-surface: #FFFFFF;
+            --rb-border: rgba(0,26,60,0.08);
+            --text-primary: #001A3C;
+            --text-secondary: #4A5568;
+            --text-muted: #718096;
+            --font-brand: 'Titillium Web', sans-serif;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: #EDF1F7;
+            min-height: 100vh;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .db-sidebar {
+            width: 260px;
+            height: 100vh;
+            background: var(--rb-dark);
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-right: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 4px 0 24px rgba(0,0,0,0.25);
+        }
+
+        .sidebar-logo {
+            padding: 1.5rem 1.25rem 1.25rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .sidebar-logo a {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .sidebar-logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--rb-red), #9A001B);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(232,0,45,0.35);
+        }
+        .sidebar-logo-text {
+            font-family: var(--font-brand);
+            font-weight: 900;
+            font-size: 0.95rem;
+            color: #fff;
+            line-height: 1.2;
+        }
+        .sidebar-logo-text span { color: var(--rb-red); }
+        .sidebar-logo-sub {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-user {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .sidebar-user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--rb-red), var(--rb-navy));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-brand);
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .sidebar-user-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.2;
+        }
+        .sidebar-user-role {
+            font-size: 0.68rem;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto;
+            min-height: 0; /* penting agar flex item bisa shrink */
+        }
+        /* Custom scrollbar untuk sidebar nav */
+        .sidebar-nav::-webkit-scrollbar {
+            width: 3px;
+        }
+        .sidebar-nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.12);
+            border-radius: 3px;
+        }
+        .sidebar-nav::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.25);
+        }
+        .nav-section-label {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.25);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 0.75rem 1.25rem 0.35rem;
+        }
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.65rem 1.25rem;
+            color: rgba(255,255,255,0.55);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            margin: 1px 0;
+        }
+        .sidebar-nav-item:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+            border-left-color: rgba(255,255,255,0.15);
+        }
+        .sidebar-nav-item.active {
+            color: #fff;
+            background: rgba(232,0,45,0.12);
+            border-left-color: var(--rb-red);
+        }
+        .sidebar-nav-item .nav-icon {
+            width: 18px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .sidebar-footer {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            flex-shrink: 0; /* jangan pernah dikompres — selalu terlihat */
+        }
+        .sidebar-logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.65rem 1rem;
+            background: rgba(232,0,45,0.08);
+            border: 1px solid rgba(232,0,45,0.2);
+            border-radius: 8px;
+            color: rgba(255,100,100,0.9);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: left;
+        }
+        .sidebar-logout-btn:hover {
+            background: rgba(232,0,45,0.18);
+            border-color: rgba(232,0,45,0.4);
+            color: #ff6b6b;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .db-main {
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+        /* Top Bar */
+        .db-topbar {
+            background: #fff;
+            border-bottom: 1px solid rgba(0,26,60,0.06);
+            padding: 0.9rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .db-topbar-title {
+            font-family: var(--font-brand);
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text-primary);
+        }
+        .db-topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .topbar-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        .badge-live {
+            background: rgba(34,197,94,0.1);
+            color: #16a34a;
+            border: 1px solid rgba(34,197,94,0.25);
+        }
+        .badge-live::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.85); }
+        }
+
+        /* ===== CONTENT AREA ===== */
+        .db-content {
+            padding: 2rem;
+        }
+
+        /* Welcome Banner */
+        .db-welcome {
+            background: linear-gradient(135deg, var(--rb-navy) 0%, #001030 60%, #0A1A30 100%);
+            border-radius: 16px;
+            padding: 1.75rem 2rem;
+            margin-bottom: 1.75rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,26,60,0.25);
+        }
+        .db-welcome::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--rb-red), var(--rb-yellow), var(--rb-red));
+            background-size: 200%;
+            animation: shimmer 4s linear infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .db-welcome::after {
+            content: '\f11e';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 6rem;
+            color: rgba(255,255,255,0.04);
+        }
+        .welcome-greeting {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.35rem;
+        }
+        .welcome-name {
+            font-family: var(--font-brand);
+            font-weight: 900;
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 0.35rem;
+        }
+        .welcome-name span { color: var(--rb-yellow); }
+        .welcome-sub {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.45);
+        }
+
+        /* Flash Messages */
+        .db-alert {
+            padding: 0.8rem 1.1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .db-alert-success {
+            background: rgba(34,197,94,0.08);
+            border: 1px solid rgba(34,197,94,0.2);
+            color: #16a34a;
+        }
+        .db-alert-error {
+            background: rgba(232,0,45,0.07);
+            border: 1px solid rgba(232,0,45,0.2);
+            color: #dc2626;
+        }
+
+        /* ===== STAT CARDS ===== */
+        .stat-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 1.5rem;
+            border: 1px solid rgba(0,26,60,0.06);
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+        }
+        .stat-card.red::before { background: var(--rb-red); }
+        .stat-card.yellow::before { background: var(--rb-yellow); }
+        .stat-card.navy::before { background: var(--rb-navy); }
+        .stat-card.green::before { background: #22c55e; }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .stat-icon.red { background: rgba(232,0,45,0.08); color: var(--rb-red); }
+        .stat-icon.yellow { background: rgba(255,201,6,0.1); color: #B89000; }
+        .stat-icon.navy { background: rgba(0,26,60,0.07); color: var(--rb-navy); }
+        .stat-icon.green { background: rgba(34,197,94,0.08); color: #16a34a; }
+
+        .stat-value {
+            font-family: var(--font-brand);
+            font-weight: 900;
+            font-size: 2.2rem;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 0.35rem;
+        }
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 600;
+        }
+
+        /* ===== SECTION CARDS ===== */
+        .db-section-card {
+            background: #fff;
+            border-radius: 14px;
+            border: 1px solid rgba(0,26,60,0.06);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+        .db-section-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(0,26,60,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .db-section-title {
+            font-family: var(--font-brand);
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .db-section-body {
+            padding: 1.25rem 1.5rem;
+        }
+
+        /* Article List */
+        .article-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid rgba(0,26,60,0.05);
+            transition: background 0.15s;
+        }
+        .article-item:last-child { border-bottom: none; }
+        .article-item:hover { background: rgba(0,26,60,0.015); margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
+        .article-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: rgba(232,0,45,0.07);
+            color: var(--rb-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .article-info { flex: 1; min-width: 0; }
+        .article-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .article-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+        .badge-kategori {
+            padding: 0.2rem 0.55rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .badge-berita { background: rgba(232,0,45,0.08); color: var(--rb-red); border: 1px solid rgba(232,0,45,0.15); }
+        .badge-analisis { background: rgba(0,26,60,0.07); color: var(--rb-navy); border: 1px solid rgba(0,26,60,0.12); }
+        .badge-teknis { background: rgba(255,201,6,0.1); color: #9A7500; border: 1px solid rgba(255,201,6,0.25); }
+        .badge-opini { background: rgba(34,197,94,0.07); color: #16a34a; border: 1px solid rgba(34,197,94,0.15); }
+
+        /* Quick Action Links */
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.9rem 1rem;
+            background: rgba(0,26,60,0.025);
+            border: 1px solid rgba(0,26,60,0.06);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            margin-bottom: 0.6rem;
+        }
+        .quick-link:last-child { margin-bottom: 0; }
+        .quick-link:hover {
+            background: rgba(232,0,45,0.04);
+            border-color: rgba(232,0,45,0.15);
+            color: var(--rb-red);
+            transform: translateX(4px);
+        }
+        .quick-link .ql-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 2.5rem;
+            color: var(--text-muted);
+        }
+        .empty-state i {
+            font-size: 2.5rem;
+            color: rgba(0,26,60,0.1);
+            margin-bottom: 0.75rem;
+        }
+        .empty-state p { font-size: 0.85rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .db-sidebar { transform: translateX(-100%); }
+            .db-main { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="db-sidebar">
+        <!-- Logo -->
+        <div class="sidebar-logo">
+            <a href="{% url 'index' %}">
+                <div class="sidebar-logo-icon">
+                    <i class="fa-solid fa-flag-checkered text-white" style="font-size: 1rem;"></i>
+                </div>
+                <div>
+                    <div class="sidebar-logo-text">Red Bull Racing<span>HUB</span></div>
+                    <div class="sidebar-logo-sub">Oracle Partner</div>
+                </div>
+            </a>
+        </div>
+
+        <!-- User Info -->
+        <div class="sidebar-user">
+            <div class="d-flex align-items-center gap-2">
+                <div class="sidebar-user-avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+                <div>
+                    <div class="sidebar-user-name">{{ request.user.username }}</div>
+                    <div class="sidebar-user-role">
+                        {% if request.user.is_superuser %}Superuser{% elif request.user.is_staff %}Staff{% else %}Member{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Main</div>
+            <a href="{% url 'accounts:dashboard' %}" class="sidebar-nav-item active" id="nav-dashboard">
+                <i class="fa-solid fa-gauge-high nav-icon"></i>
+                Dashboard
+            </a>
+            <a href="{% url 'index' %}" class="sidebar-nav-item" id="nav-home">
+                <i class="fa-solid fa-house nav-icon"></i>
+                Beranda
+            </a>
+
+            <div class="nav-section-label">Konten</div>
+            <a href="{% url 'artikel:artikel_list' %}" class="sidebar-nav-item" id="nav-artikel">
+                <i class="fa-solid fa-newspaper nav-icon"></i>
+                Artikel
+            </a>
+            <a href="{% url 'artikel:artikel_tulis' %}" class="sidebar-nav-item" id="nav-tulis">
+                <i class="fa-solid fa-pen-nib nav-icon"></i>
+                Tulis Artikel
+            </a>
+            <a href="{% url 'galeri:galeri_list' %}" class="sidebar-nav-item" id="nav-galeri">
+                <i class="fa-solid fa-helmet-safety nav-icon"></i>
+                Galeri Helm
+            </a>
+            <a href="{% url 'kontak' %}" class="sidebar-nav-item" id="nav-kontak">
+                <i class="fa-solid fa-id-card nav-icon"></i>
+                Kontak VIP
+            </a>
+
+            {% if request.user.is_staff %}
+            <div class="nav-section-label">Admin</div>
+            <a href="/admin/" class="sidebar-nav-item" id="nav-admin">
+                <i class="fa-solid fa-shield-halved nav-icon"></i>
+                Django Admin
+            </a>
+            {% endif %}
+        </nav>
+
+        <!-- Logout -->
+        <div class="sidebar-footer">
+            <form method="POST" action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="sidebar-logout-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN ===== -->
+    <main class="db-main">
+        <!-- Top Bar -->
+        <header class="db-topbar">
+            <div class="db-topbar-title">
+                <i class="fa-solid fa-gauge-high text-rb-red me-2" style="color: var(--rb-red);"></i>
+                Dashboard
+            </div>
+            <div class="db-topbar-actions">
+                <span class="topbar-badge badge-live">Sistem Online</span>
+                <a href="{% url 'artikel:artikel_tulis' %}" class="btn btn-sm" style="background: var(--rb-red); color: #fff; font-family: var(--font-brand); font-weight: 700; font-size: 0.75rem; letter-spacing: 1px; border-radius: 8px; padding: 0.4rem 1rem;">
+                    <i class="fa-solid fa-pen-nib me-1"></i>TULIS ARTIKEL
+                </a>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="db-content">
+
+            <!-- Flash Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                <div class="db-alert {% if message.tags == 'error' %}db-alert-error{% else %}db-alert-success{% endif %}">
+                    <i class="fa-solid {% if message.tags == 'error' %}fa-triangle-exclamation{% else %}fa-circle-check{% endif %}"></i>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Welcome Banner -->
+            <div class="db-welcome">
+                <div class="welcome-greeting">
+                    <i class="fa-solid fa-satellite-dish me-1" style="color: #22c55e;"></i>
+                    Paddock Connected · Oracle Red Bull Racing
+                </div>
+                <div class="welcome-name">
+                    Selamat datang, <span>{{ request.user.username }}</span>!
+                </div>
+                <div class="welcome-sub">
+                    <i class="fa-regular fa-clock me-1"></i>
+                    {% now "l, d F Y" %} &nbsp;·&nbsp;
+                    {% if request.user.is_superuser %}
+                        <i class="fa-solid fa-shield-halved me-1" style="color: var(--rb-yellow);"></i>Superuser
+                    {% elif request.user.is_staff %}
+                        <i class="fa-solid fa-star me-1" style="color: var(--rb-yellow);"></i>Staff Member
+                    {% else %}
+                        <i class="fa-solid fa-user me-1"></i>Community Member
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Stat Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-sm-6 col-xl-3">
+                    <div class="stat-card red">
+                        <div class="stat-icon red">
+                            <i class="fa-solid fa-newspaper"></i>
+                        </div>
+                        <div class="stat-value">{{ total_artikel }}</div>
+                        <div class="stat-label">Total Artikel</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="stat-card yellow">
+                        <div class="stat-icon yellow">
+                            <i class="fa-solid fa-helmet-safety"></i>
+                        </div>
+                        <div class="stat-value">{{ total_galeri }}</div>
+                        <div class="stat-label">Koleksi Helm</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="stat-card navy">
+                        <div class="stat-icon navy">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div class="stat-value">{{ total_users }}</div>
+                        <div class="stat-label">Total Pengguna</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="stat-card green">
+                        <div class="stat-icon green">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">Sistem Status</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Row -->
+            <div class="row g-3">
+                <!-- Recent Articles -->
+                <div class="col-lg-7">
+                    <div class="db-section-card">
+                        <div class="db-section-header">
+                            <div class="db-section-title">
+                                <i class="fa-solid fa-newspaper" style="color: var(--rb-red);"></i>
+                                Artikel Terbaru
+                            </div>
+                            <a href="{% url 'artikel:artikel_list' %}" style="font-size: 0.75rem; color: var(--rb-red); text-decoration: none; font-weight: 600;">
+                                Lihat Semua <i class="fa-solid fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                        <div class="db-section-body">
+                            {% if recent_artikel %}
+                                {% for artikel in recent_artikel %}
+                                <div class="article-item">
+                                    <div class="article-num">{{ forloop.counter }}</div>
+                                    <div class="article-info">
+                                        <div class="article-title">{{ artikel.judul }}</div>
+                                        <div class="article-meta">
+                                            <i class="fa-solid fa-user me-1"></i>{{ artikel.penulis }}
+                                            &nbsp;·&nbsp;
+                                            <i class="fa-regular fa-calendar me-1"></i>{{ artikel.tanggal_dibuat|date:"d M Y" }}
+                                        </div>
+                                    </div>
+                                    <span class="badge-kategori
+                                        {% if artikel.kategori == 'Berita Tim' %}badge-berita
+                                        {% elif artikel.kategori == 'Analisis Balapan' %}badge-analisis
+                                        {% elif artikel.kategori == 'Pembaruan Teknis' %}badge-teknis
+                                        {% else %}badge-opini{% endif %}">
+                                        {{ artikel.kategori }}
+                                    </span>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="empty-state">
+                                    <i class="fa-solid fa-newspaper d-block"></i>
+                                    <p>Belum ada artikel. <a href="{% url 'artikel:artikel_tulis' %}" style="color: var(--rb-red);">Tulis artikel pertama!</a></p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="col-lg-5">
+                    <div class="db-section-card mb-3">
+                        <div class="db-section-header">
+                            <div class="db-section-title">
+                                <i class="fa-solid fa-bolt" style="color: var(--rb-yellow);"></i>
+                                Aksi Cepat
+                            </div>
+                        </div>
+                        <div class="db-section-body">
+                            <a href="{% url 'artikel:artikel_tulis' %}" class="quick-link">
+                                <div class="ql-icon" style="background: rgba(232,0,45,0.08); color: var(--rb-red);">
+                                    <i class="fa-solid fa-pen-nib"></i>
+                                </div>
+                                Tulis Artikel Baru
+                                <i class="fa-solid fa-arrow-right ms-auto" style="font-size: 0.7rem; color: rgba(0,26,60,0.3);"></i>
+                            </a>
+                            <a href="{% url 'artikel:artikel_list' %}" class="quick-link">
+                                <div class="ql-icon" style="background: rgba(0,26,60,0.06); color: var(--rb-navy);">
+                                    <i class="fa-solid fa-list"></i>
+                                </div>
+                                Daftar Semua Artikel
+                                <i class="fa-solid fa-arrow-right ms-auto" style="font-size: 0.7rem; color: rgba(0,26,60,0.3);"></i>
+                            </a>
+                            <a href="{% url 'galeri:galeri_list' %}" class="quick-link">
+                                <div class="ql-icon" style="background: rgba(255,201,6,0.1); color: #9A7500;">
+                                    <i class="fa-solid fa-helmet-safety"></i>
+                                </div>
+                                Galeri Helm
+                                <i class="fa-solid fa-arrow-right ms-auto" style="font-size: 0.7rem; color: rgba(0,26,60,0.3);"></i>
+                            </a>
+                            <a href="{% url 'kontak' %}" class="quick-link">
+                                <div class="ql-icon" style="background: rgba(34,197,94,0.07); color: #16a34a;">
+                                    <i class="fa-solid fa-id-card"></i>
+                                </div>
+                                Kontak VIP
+                                <i class="fa-solid fa-arrow-right ms-auto" style="font-size: 0.7rem; color: rgba(0,26,60,0.3);"></i>
+                            </a>
+                            {% if request.user.is_staff %}
+                            <a href="/admin/" class="quick-link">
+                                <div class="ql-icon" style="background: rgba(99,102,241,0.08); color: #4f46e5;">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+                                Django Admin Panel
+                                <i class="fa-solid fa-arrow-right ms-auto" style="font-size: 0.7rem; color: rgba(0,26,60,0.3);"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Account Info Card -->
+                    <div class="db-section-card">
+                        <div class="db-section-header">
+                            <div class="db-section-title">
+                                <i class="fa-solid fa-user-circle" style="color: var(--rb-navy);"></i>
+                                Info Akun
+                            </div>
+                        </div>
+                        <div class="db-section-body">
+                            <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.82rem;">
+                                    <span style="color: var(--text-muted);">Username</span>
+                                    <span style="color: var(--text-primary); font-weight: 600;">{{ request.user.username }}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.82rem;">
+                                    <span style="color: var(--text-muted);">Email</span>
+                                    <span style="color: var(--text-primary); font-weight: 600;">{{ request.user.email|default:"—" }}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.82rem;">
+                                    <span style="color: var(--text-muted);">Bergabung</span>
+                                    <span style="color: var(--text-primary); font-weight: 600;">{{ request.user.date_joined|date:"d M Y" }}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.82rem;">
+                                    <span style="color: var(--text-muted);">Role</span>
+                                    <span style="font-weight: 600; {% if request.user.is_superuser %}color: #dc2626;{% elif request.user.is_staff %}color: #d97706;{% else %}color: #16a34a;{% endif %}">
+                                        {% if request.user.is_superuser %}Superuser{% elif request.user.is_staff %}Staff{% else %}Member{% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(() => {
+            document.querySelectorAll('.db-alert').forEach(el => {
+                el.style.transition = 'opacity 0.5s';
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 500);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>
