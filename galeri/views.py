@@ -3,7 +3,7 @@ from .models import Helm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-@login_required(login_url='accounts:login')
+
 def galeri_list(request):
     query = request.GET.get('q', '')
     helms = Helm.objects.all()

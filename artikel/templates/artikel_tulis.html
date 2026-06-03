@@ -52,7 +52,7 @@
                                 </label>
                                 <select class="form-control form-control-f1" id="kategori" name="kategori" required>
                                     {% for cat in categories %}
-                                    <option value="{{ cat }}" {% if artikel.kategori == cat %}selected{% endif %}>{{ cat }}</option>
+                                    <option value="{{ cat.nama }}" {% if artikel.kategori.nama == cat.nama %}selected{% endif %}>{{ cat.nama }}</option>
                                     {% endfor %}
                                 </select>
                             </div>

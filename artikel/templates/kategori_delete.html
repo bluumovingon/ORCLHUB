@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <div class="d-inline-flex align-items-center gap-2 mb-3 px-3 py-2 rounded"
+                style="background: rgba(232,0,45,0.08); border: 1px solid rgba(232,0,45,0.25);">
+                <i class="fa-solid fa-triangle-exclamation text-rb-red"></i>
+                <span style="font-family: var(--font-brand); font-size: 0.7rem; color: var(--rb-red); letter-spacing: 1px; text-transform: uppercase;">
+                    Danger Zone
+                </span>
+            </div>
+            <h1 class="title-f1 mb-2" style="font-size: 1.8rem; color: var(--rb-navy);">Konfirmasi Hapus Kategori</h1>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">Apakah Anda yakin ingin menghapus kategori berikut secara permanen?</p>
+        </div>
+
+        <!-- Confirm Card -->
+        <div class="card-f1" style="border-top: 3px solid var(--rb-red);">
+            <div class="p-4 p-md-5 text-center">
+                
+                <div class="mb-4">
+                    <i class="fa-solid fa-tags text-rb-red mb-3" style="font-size: 3rem; opacity: 0.85;"></i>
+                    <h3 class="fw-bold mb-1" style="color: var(--rb-navy);">{{ kategori.nama }}</h3>
+                    <p class="font-monospace text-muted small">Slug: {{ kategori.slug }}</p>
+                </div>
+
+                <!-- Warning notice about articles inside -->
+                {% if kategori.artikels.count > 0 %}
+                <div class="alert alert-warning border-0 p-3 mb-4 text-start" style="background: rgba(255,201,6,0.1); color: #856404; font-size: 0.85rem; border-left: 4px solid var(--rb-yellow);">
+                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                    <strong>Peringatan!</strong> Kategori ini memiliki <strong>{{ kategori.artikels.count }} artikel</strong> di dalamnya. Jika Anda menghapusnya, kategori pada artikel-artikel tersebut akan disetel menjadi kosong (NULL).
+                </div>
+                {% else %}
+                <div class="alert alert-info border-0 p-3 mb-4 text-start" style="background: rgba(0,26,60,0.03); color: var(--text-secondary); font-size: 0.85rem; border-left: 4px solid var(--rb-navy);">
+                    <i class="fa-solid fa-circle-info me-2"></i>
+                    Kategori ini kosong (tidak ada artikel yang dikaitkan). Penghapusan aman dilakukan.
+                </div>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-danger flex-grow-1 py-2.5" style="background: var(--rb-red); border: none; font-weight: 600; font-family: var(--font-brand);">
+                            <i class="fa-solid fa-trash me-1"></i> Ya, Hapus Kategori
+                        </button>
+                        <a href="{% url 'artikel:admin_kategori_list' %}" class="btn-f1-outline">
+                            <i class="fa-solid fa-xmark"></i> Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Barcode Footer -->
+            <div class="barcode-container mx-4 mx-md-5 mb-4">
+                <div>
+                    <p class="mb-0" style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Authorization</p>
+                    <p class="mb-0" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Oracle Red Bull Racing Hub</p>
+                </div>
+                <div class="d-flex flex-column align-items-end gap-1">
+                    <div class="barcode-lines"></div>
+                    <span class="pass-id">DELETE-SEC-2026</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

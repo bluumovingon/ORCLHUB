@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load auth_extras %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12">
+        <!-- Header -->
+        <div class="d-flex align-items-end justify-content-between flex-wrap gap-3 mb-5">
+            <div>
+                <p class="section-heading mb-2">
+                    <i class="fa-solid fa-users-gear text-rb-red me-2"></i>Admin Console
+                </p>
+                <h2 class="title-f1 mb-2" style="font-size: 2rem;">Manajemen <span class="text-rb-red">User</span></h2>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Kelola hak akses, status staff, dan peran pengguna sistem Oracle Red Bull Racing Hub.</p>
+            </div>
+            <a href="{% url 'accounts:dashboard' %}" class="btn-f1-outline">
+                <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Dashboard
+            </a>
+        </div>
+
+        <!-- User Table Card -->
+        <div class="card-f1" style="border-top: 3px solid var(--rb-red);">
+            <div class="p-4 p-md-5">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" style="color: var(--text-primary);">
+                        <thead style="background: rgba(0, 26, 60, 0.05); font-family: var(--font-brand);">
+                            <tr>
+                                <th scope="col" class="py-3 px-3" style="font-size: 0.85rem; font-weight: 700; border-bottom: 2px solid rgba(0,26,60,0.1);">#</th>
+                                <th scope="col" class="py-3" style="font-size: 0.85rem; font-weight: 700; border-bottom: 2px solid rgba(0,26,60,0.1);">Username</th>
+                                <th scope="col" class="py-3" style="font-size: 0.85rem; font-weight: 700; border-bottom: 2px solid rgba(0,26,60,0.1);">Email</th>
+                                <th scope="col" class="py-3" style="font-size: 0.85rem; font-weight: 700; border-bottom: 2px solid rgba(0,26,60,0.1);">Role</th>
+                                <th scope="col" class="py-3 text-center" style="font-size: 0.85rem; font-weight: 700; border-bottom: 2px solid rgba(0,26,60,0.1);">Staff Status</th>
+                                <th scope="col" class="py-3 text-center" style="font-size: 0.85rem; font-weight: 700; border-bottom: 2px solid rgba(0,26,60,0.1);">Superuser</th>
+                                <th scope="col" class="py-3" style="font-size: 0.85rem; font-weight: 700; border-bottom: 2px solid rgba(0,26,60,0.1);">Bergabung</th>
+                                <th scope="col" class="py-3 text-center" style="font-size: 0.85rem; font-weight: 700; border-bottom: 2px solid rgba(0,26,60,0.1);">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for u in users %}
+                            <tr style="border-bottom: 1px solid rgba(0,26,60,0.05); transition: background-color 0.2s;">
+                                <td class="py-3 px-3 font-monospace" style="font-size: 0.85rem;">{{ forloop.counter }}</td>
+                                <td class="py-3 font-semibold" style="font-size: 0.9rem;">
+                                    {{ u.username }}
+                                    {% if u == request.user %}
+                                    <span class="badge bg-danger px-2 ms-1" style="font-size: 0.65rem; text-transform: uppercase; font-family: var(--font-brand);">Anda</span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3" style="font-size: 0.85rem; color: var(--text-muted);">{{ u.email|default:"—" }}</td>
+                                <td class="py-3">
+                                    {% if u|is_admin %}
+                                    <span class="badge bg-danger py-1.5 px-3" style="font-size: 0.7rem; border-radius: 4px; font-family: var(--font-brand);">Admin</span>
+                                    {% elif u|is_editor %}
+                                    <span class="badge bg-warning text-dark py-1.5 px-3" style="font-size: 0.7rem; border-radius: 4px; font-family: var(--font-brand);">Editor</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary py-1.5 px-3" style="font-size: 0.7rem; border-radius: 4px; font-family: var(--font-brand);">User</span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 text-center" style="font-size: 1.1rem;">
+                                    {% if u.is_staff %}
+                                    <i class="fa-solid fa-circle-check text-success" title="Yes"></i>
+                                    {% else %}
+                                    <i class="fa-solid fa-circle-xmark text-danger" title="No"></i>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 text-center" style="font-size: 1.1rem;">
+                                    {% if u.is_superuser %}
+                                    <i class="fa-solid fa-circle-check text-success" title="Yes"></i>
+                                    {% else %}
+                                    <i class="fa-solid fa-circle-xmark text-danger" title="No"></i>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3" style="font-size: 0.85rem; color: var(--text-muted);">{{ u.date_joined|date:"d M Y H:i" }}</td>
+                                <td class="py-3 text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="{% url 'artikel:admin_user_edit' u.id %}" class="btn btn-sm btn-f1-outline" style="padding: 5px 10px; font-size: 0.75rem;" title="Edit Role & Status">
+                                            <i class="fa-solid fa-user-pen"></i> Edit
+                                        </a>
+                                        {% if u != request.user %}
+                                        <form method="POST" action="{% url 'artikel:admin_user_delete' u.id %}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus user {{ u.username }}? Tindakan ini tidak dapat dibatalkan.');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-f1-outline" style="padding: 5px 10px; font-size: 0.75rem; border-color: var(--rb-red); color: var(--rb-red);" title="Hapus User">
+                                                <i class="fa-solid fa-trash"></i> Hapus
+                                            </button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

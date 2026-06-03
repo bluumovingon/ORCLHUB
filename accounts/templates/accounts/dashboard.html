@@ -1,4 +1,4 @@
-{% load static %}
+{% load static auth_extras %}
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -550,7 +550,7 @@
                 <div>
                     <div class="sidebar-user-name">{{ request.user.username }}</div>
                     <div class="sidebar-user-role">
-                        {% if request.user.is_superuser %}Superuser{% elif request.user.is_staff %}Staff{% else %}Member{% endif %}
+                        {% if request.user|is_admin %}Admin{% elif request.user|is_editor %}Editor{% else %}User{% endif %}
                     </div>
                 </div>
             </div>
@@ -573,10 +573,12 @@
                 <i class="fa-solid fa-newspaper nav-icon"></i>
                 Artikel
             </a>
+            {% if request.user|is_admin or request.user|is_editor %}
             <a href="{% url 'artikel:artikel_tulis' %}" class="sidebar-nav-item" id="nav-tulis">
                 <i class="fa-solid fa-pen-nib nav-icon"></i>
                 Tulis Artikel
             </a>
+            {% endif %}
             <a href="{% url 'galeri:galeri_list' %}" class="sidebar-nav-item" id="nav-galeri">
                 <i class="fa-solid fa-helmet-safety nav-icon"></i>
                 Galeri Helm
@@ -586,8 +588,16 @@
                 Kontak VIP
             </a>
 
-            {% if request.user.is_staff %}
+            {% if request.user|is_admin %}
             <div class="nav-section-label">Admin</div>
+            <a href="{% url 'artikel:admin_user_list' %}" class="sidebar-nav-item" id="nav-users">
+                <i class="fa-solid fa-users-gear nav-icon"></i>
+                Manajemen User
+            </a>
+            <a href="{% url 'artikel:admin_kategori_list' %}" class="sidebar-nav-item" id="nav-kategori">
+                <i class="fa-solid fa-tags nav-icon"></i>
+                Manajemen Kategori
+            </a>
             <a href="/admin/" class="sidebar-nav-item" id="nav-admin">
                 <i class="fa-solid fa-shield-halved nav-icon"></i>
                 Django Admin
@@ -617,9 +627,11 @@
             </div>
             <div class="db-topbar-actions">
                 <span class="topbar-badge badge-live">Sistem Online</span>
+                {% if request.user|is_admin or request.user|is_editor %}
                 <a href="{% url 'artikel:artikel_tulis' %}" class="btn btn-sm" style="background: var(--rb-red); color: #fff; font-family: var(--font-brand); font-weight: 700; font-size: 0.75rem; letter-spacing: 1px; border-radius: 8px; padding: 0.4rem 1rem;">
                     <i class="fa-solid fa-pen-nib me-1"></i>TULIS ARTIKEL
                 </a>
+                {% endif %}
             </div>
         </header>
 
@@ -648,12 +660,12 @@
                 <div class="welcome-sub">
                     <i class="fa-regular fa-clock me-1"></i>
                     {% now "l, d F Y" %} &nbsp;·&nbsp;
-                    {% if request.user.is_superuser %}
-                        <i class="fa-solid fa-shield-halved me-1" style="color: var(--rb-yellow);"></i>Superuser
-                    {% elif request.user.is_staff %}
-                        <i class="fa-solid fa-star me-1" style="color: var(--rb-yellow);"></i>Staff Member
+                    {% if request.user|is_admin %}
+                        <i class="fa-solid fa-shield-halved me-1" style="color: var(--rb-yellow);"></i>Admin
+                    {% elif request.user|is_editor %}
+                        <i class="fa-solid fa-star me-1" style="color: var(--rb-yellow);"></i>Editor
                     {% else %}
-                        <i class="fa-solid fa-user me-1"></i>Community Member
+                        <i class="fa-solid fa-user me-1"></i>User
                     {% endif %}
                 </div>
             </div>
@@ -754,6 +766,7 @@
                             </div>
                         </div>
                         <div class="db-section-body">
+                            {% if request.user|is_admin or request.user|is_editor %}
                             <a href="{% url 'artikel:artikel_tulis' %}" class="quick-link">
                                 <div class="ql-icon" style="background: rgba(232,0,45,0.08); color: var(--rb-red);">
                                     <i class="fa-solid fa-pen-nib"></i>
@@ -761,6 +774,7 @@
                                 Tulis Artikel Baru
                                 <i class="fa-solid fa-arrow-right ms-auto" style="font-size: 0.7rem; color: rgba(0,26,60,0.3);"></i>
                             </a>
+                            {% endif %}
                             <a href="{% url 'artikel:artikel_list' %}" class="quick-link">
                                 <div class="ql-icon" style="background: rgba(0,26,60,0.06); color: var(--rb-navy);">
                                     <i class="fa-solid fa-list"></i>
@@ -818,8 +832,8 @@
                                 </div>
                                 <div style="display: flex; justify-content: space-between; font-size: 0.82rem;">
                                     <span style="color: var(--text-muted);">Role</span>
-                                    <span style="font-weight: 600; {% if request.user.is_superuser %}color: #dc2626;{% elif request.user.is_staff %}color: #d97706;{% else %}color: #16a34a;{% endif %}">
-                                        {% if request.user.is_superuser %}Superuser{% elif request.user.is_staff %}Staff{% else %}Member{% endif %}
+                                    <span style="font-weight: 600; {% if request.user|is_admin %}color: #dc2626;{% elif request.user|is_editor %}color: #d97706;{% else %}color: #16a34a;{% endif %}">
+                                        {% if request.user|is_admin %}Admin{% elif request.user|is_editor %}Editor{% else %}User{% endif %}
                                     </span>
                                 </div>
                             </div>

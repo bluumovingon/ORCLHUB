@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load auth_extras %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <div class="d-inline-flex align-items-center gap-2 mb-3 px-3 py-2 rounded"
+                style="background: rgba(255,201,6,0.08); border: 1px solid rgba(255,201,6,0.25);">
+                <i class="fa-solid fa-user-gear text-rb-red"></i>
+                <span style="font-family: var(--font-brand); font-size: 0.7rem; color: var(--rb-red); letter-spacing: 1px; text-transform: uppercase;">
+                    User Authorization Console
+                </span>
+            </div>
+            <h1 class="title-f1 mb-2" style="font-size: 1.8rem; color: var(--rb-navy);">Edit Otorisasi User</h1>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">Ubah group role, staff privileges, dan superuser status untuk <strong>{{ edit_user.username }}</strong>.</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="card-f1" style="border-top: 3px solid var(--rb-red);">
+            <div class="p-4 p-md-5">
+                <form method="POST" action="{% url 'artikel:admin_user_edit' edit_user.id %}">
+                    {% csrf_token %}
+
+                    <!-- User Info (Read-only representation) -->
+                    <div class="mb-4 p-3 rounded" style="background: rgba(0, 26, 60, 0.03); border: 1px solid rgba(0, 26, 60, 0.05);">
+                        <div class="row g-2">
+                            <div class="col-sm-4 text-muted small text-uppercase">Username:</div>
+                            <div class="col-sm-8 fw-bold">{{ edit_user.username }}</div>
+
+                            <div class="col-sm-4 text-muted small text-uppercase">Email:</div>
+                            <div class="col-sm-8">{{ edit_user.email|default:"—" }}</div>
+
+                            <div class="col-sm-4 text-muted small text-uppercase">Role Saat Ini:</div>
+                            <div class="col-sm-8">
+                                {% if current_role %}
+                                    <span class="badge {% if current_role == 'Admin' %}bg-danger{% elif current_role == 'Editor' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                                        {{ current_role }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-light text-dark border">No Group</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Role Dropdown -->
+                    <div class="form-f1-group mb-4">
+                        <label for="role" class="form-label-f1">
+                            <i class="fa-solid fa-users text-rb-red me-1"></i>Pilih Group/Role
+                        </label>
+                        <select class="form-control form-control-f1" id="role" name="role" required>
+                            {% for role_opt in available_roles %}
+                            <option value="{{ role_opt }}" {% if current_role == role_opt %}selected{% endif %}>
+                                {{ role_opt }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text mt-2" style="font-size: 0.75rem;">
+                            <strong>Admin</strong>: Kontrol penuh sistem, CRUD Kategori, User Management.<br>
+                            <strong>Editor</strong>: Menulis dan mengedit artikel.<br>
+                            <strong>User</strong>: Anggota komunitas biasa dengan hak baca saja.
+                        </div>
+                    </div>
+
+                    <!-- Privileges (Checkboxes) -->
+                    <div class="mb-4">
+                        <label class="form-label-f1 mb-3">
+                            <i class="fa-solid fa-shield-halved text-rb-red me-1"></i>Status Privilege Django
+                        </label>
+                        
+                        <!-- Staff Checkbox -->
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="is_staff" name="is_staff" 
+                                {% if edit_user.is_staff %}checked{% endif %} style="cursor: pointer;">
+                            <label class="form-check-label ms-2" for="is_staff" style="cursor: pointer; font-size: 0.88rem;">
+                                <strong>Staff Status</strong> (Dapat masuk ke Django Admin panel)
+                            </label>
+                        </div>
+
+                        <!-- Superuser Checkbox -->
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_superuser" name="is_superuser" 
+                                {% if edit_user.is_superuser %}checked{% endif %} style="cursor: pointer;">
+                            <label class="form-check-label ms-2" for="is_superuser" style="cursor: pointer; font-size: 0.88rem;">
+                                <strong>Superuser Status</strong> (Memiliki semua hak akses tanpa batasan)
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex gap-3 mt-5">
+                        <button type="submit" class="btn-f1 flex-grow-1 justify-content-center">
+                            <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
+                        </button>
+                        <a href="{% url 'artikel:admin_user_list' %}" class="btn-f1-outline">
+                            <i class="fa-solid fa-xmark"></i> Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Barcode Footer -->
+            <div class="barcode-container mx-4 mx-md-5 mb-4">
+                <div>
+                    <p class="mb-0" style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Security Officer</p>
+                    <p class="mb-0" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Oracle Red Bull Racing Hub</p>
+                </div>
+                <div class="d-flex flex-column align-items-end gap-1">
+                    <div class="barcode-lines"></div>
+                    <span class="pass-id">SEC-AUTH-2026</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

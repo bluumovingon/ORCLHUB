@@ -30,8 +30,8 @@
         <a href="{% url 'artikel:artikel_list' %}{% if query %}?q={{ query }}{% endif %}"
             class="category-pill {% if not selected_category %}active{% endif %}">Semua</a>
         {% for cat in categories %}
-        <a href="{% url 'artikel:artikel_list' %}?category={{ cat }}{% if query %}&q={{ query }}{% endif %}"
-            class="category-pill {% if selected_category == cat %}active{% endif %}">{{ cat }}</a>
+        <a href="{% url 'artikel:artikel_list' %}?category={{ cat.nama }}{% if query %}&q={{ query }}{% endif %}"
+            class="category-pill {% if selected_category == cat.nama %}active{% endif %}">{{ cat.nama }}</a>
         {% endfor %}
         {% if query or selected_category %}
         <a href="{% url 'artikel:artikel_list' %}" class="category-pill" style="border-color: var(--rb-red); color: var(--rb-red);">

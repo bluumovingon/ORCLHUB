@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <div class="d-inline-flex align-items-center gap-2 mb-3 px-3 py-2 rounded"
+                style="background: rgba(255,201,6,0.08); border: 1px solid rgba(255,201,6,0.25);">
+                <i class="fa-solid fa-tags text-rb-red"></i>
+                <span style="font-family: var(--font-brand); font-size: 0.7rem; color: var(--rb-red); letter-spacing: 1px; text-transform: uppercase;">
+                    Category Management
+                </span>
+            </div>
+            <h1 class="title-f1 mb-2" style="font-size: 1.8rem; color: var(--rb-navy);">
+                {% if kategori %}Edit Kategori{% else %}Tambah Kategori Baru{% endif %}
+            </h1>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                {% if kategori %}Perbarui nama kategori yang sudah ada.{% else %}Buat kategori baru untuk mengelompokkan artikel paddock.{% endif %}
+            </p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="card-f1" style="border-top: 3px solid var(--rb-red);">
+            <div class="p-4 p-md-5">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="form-f1-group mb-4">
+                        <label for="nama" class="form-label-f1">
+                            <i class="fa-solid fa-tag text-rb-red me-1"></i>Nama Kategori
+                        </label>
+                        <input type="text" class="form-control form-control-f1" id="nama" name="nama"
+                            value="{{ kategori.nama|default:'' }}" placeholder="Contoh: Analisis Ban, Strategi Balapan..." required>
+                        <div class="form-text mt-2" style="font-size: 0.75rem;">
+                            Slug URL kategori akan otomatis dibuat berdasarkan nama yang diisi di sini.
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex gap-3 mt-5">
+                        <button type="submit" class="btn-f1 flex-grow-1 justify-content-center">
+                            <i class="fa-solid fa-paper-plane"></i> {% if kategori %}Simpan Perubahan{% else %}Buat Kategori{% endif %}
+                        </button>
+                        <a href="{% url 'artikel:admin_kategori_list' %}" class="btn-f1-outline">
+                            <i class="fa-solid fa-xmark"></i> Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Barcode Footer -->
+            <div class="barcode-container mx-4 mx-md-5 mb-4">
+                <div>
+                    <p class="mb-0" style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Content Admin</p>
+                    <p class="mb-0" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Oracle Red Bull Racing Hub</p>
+                </div>
+                <div class="d-flex flex-column align-items-end gap-1">
+                    <div class="barcode-lines"></div>
+                    <span class="pass-id">CAT-MAN-2026</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

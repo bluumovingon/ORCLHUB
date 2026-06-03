@@ -53,7 +53,6 @@ def register_view(request):
 
 
 def logout_view(request):
-    """Logout and redirect to login page."""
     if request.method == 'POST':
         logout(request)
         messages.success(request, 'Anda telah berhasil logout. Sampai jumpa di paddock! 👋')
@@ -62,8 +61,7 @@ def logout_view(request):
 
 @login_required(login_url='accounts:login')
 def dashboard_view(request):
-    """Dashboard - protected view, only accessible by authenticated users."""
-    # Collect stats for dashboard
+    # Mengambil statistik untuk dashboard
     try:
         total_artikel = Artikel.objects.count()
     except Exception:
